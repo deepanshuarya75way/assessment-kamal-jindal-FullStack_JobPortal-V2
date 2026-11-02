@@ -106,10 +106,6 @@ const findRecruiterApplication = async (applicationId, recruiterId) => {
   return { application };
 };
 
-/* =========================================================
-APPLY FOR A JOB
-========================================================= */
-
 router.post(
   "/:jobId",
   protect,
@@ -163,10 +159,6 @@ router.post(
     }
   }
 );
-
-/* =========================================================
-STUDENT: GET MY APPLICATIONS AND INTERVIEWS
-========================================================= */
 
 router.get(
   "/me",

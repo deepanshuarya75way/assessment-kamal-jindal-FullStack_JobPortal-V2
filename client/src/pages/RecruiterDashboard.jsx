@@ -50,13 +50,24 @@ const toEditForm = (job) => ({
 
 const RecruiterDashboard = () => {
   const [jobs, setJobs] = useState([]);
-  const [applications, setApplications] = useState([]);
   const [applicationFilters, setApplicationFilters] = useState({ search: "", status: "", jobId: "" });
   const [editingJob, setEditingJob] = useState(null);
   const [editForm, setEditForm] = useState(emptyEditForm);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [savingEdit, setSavingEdit] = useState(false);
+  const [showInterviewForm,setShowInterviewForm] = useState(false);
+  const [interviewForm, setInterviewForm] = useState({
+    candidateName: "",
+    candidateEmail: "",
+    jobTitle: "",
+    interviewDate: "",
+    interviewTime: "",
+    stage: "Technical",
+    meetingLink: "",
+    notes: ""
+  });
+  const [applications, setApplications] = useState([]);
 
   const filteredApplications = useMemo(() => applications, [applications]);
 
@@ -152,6 +163,8 @@ const RecruiterDashboard = () => {
   };
 
   return (
+    
+     <>
     <section className="page recruiter-page">
       <div className="page-heading">
         <div>
@@ -168,48 +181,6 @@ const RecruiterDashboard = () => {
         <p>Loading dashboard...</p>
       ) : (
         <div className="dashboard-grid">
-          <section className="card">
-            <h2>Posted Jobs</h2>
-            {jobs.length ? (
-              <div className="stack">
-                {jobs.map((job) => (
-                  <article className="mini-card job-admin-card" key={job._id}>
-                    <div>
-                      <div className="job-title-row">
-                        <h3>{job.title}</h3>
-                        <StatusBadge status={job.status} />
-                      </div>
-                      <p className="muted">
-                        {job.company} - {job.location}
-                      </p>
-                      <p className="muted small">
-                        {job.employmentType} - {job.workMode || "On-site"} - {job.experienceLevel || "Entry"}
-                        {job.deadline ? ` - Apply by ${formatDate(job.deadline)}` : ""}
-                      </p>
-                      {job.tags?.length > 0 && (
-                        <div className="tag-list compact">
-                          {job.tags.slice(0, 5).map((tag) => (
-                            <span key={tag}>{tag}</span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                    <div className="actions">
-                      <button className="button ghost" onClick={() => startEditing(job)} type="button">
-                        Edit
-                      </button>
-                      <button className="button danger" onClick={() => deleteJob(job._id)} type="button">
-                        Delete
-                      </button>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            ) : (
-              <p className="muted">No jobs posted yet.</p>
-            )}
-          </section>
-
           <section className="card">
             <div className="section-heading">
               <h2>Applications</h2>
@@ -299,6 +270,23 @@ const RecruiterDashboard = () => {
                     )}
                   </article>
                 ))}
+                {applications.status === "Shortlisted" && (
+                    <button type="button" onClick={() => {
+                      setInterviewForm({
+                        candidateName: application.name,
+                        candidateEmail: application.email,
+                        jobTitle: application.jobTitle,
+                        interviewDate: "",
+                        interviewTime: "",
+                        stage: "Technical",
+                        meetingLink: "",
+                        notes: ""
+                      });
+                      setShowInterviewForm(true);
+                    }}
+                    >Schedule Interview
+                    </button>
+                  )}
               </div>
             ) : (
               <p className="muted">No applications match these filters.</p>
@@ -411,7 +399,10 @@ const RecruiterDashboard = () => {
         </div>
       )}
     </section>
+    </>
   );
 };
 
 export default RecruiterDashboard;
+
+

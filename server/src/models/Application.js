@@ -13,6 +13,59 @@ const applicationSchema = new mongoose.Schema(
       ref: "Job",
       required: true
     },
+    interview: [
+      {
+        stageTitle:{
+          type:String,
+          required:true,
+          trim:true,
+          maxlength:150
+        },
+        scheduledAt: {
+          type: Date,
+          required:true
+        },
+        meetingLink: {
+          type: String,
+          trim: true,
+          maxlength: 1000,
+          default: ""
+        },
+        status: {
+          type:String,
+          enum: ["Scheduled","Cancelled","completed"],
+          default: "Scheduled"
+        },
+        applicantResponse: {
+          type: String,
+          enum: [
+            "Pending",
+            "Confirmed",
+            "Reschedule Requested"
+          ],
+          default: "Pending"
+        },
+        rescheduleNote: {
+          type: String,
+          trim: true,
+          maxlength: 1000,
+          default: ""
+        },
+        scheduledBy: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+          required: true
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now
+        },
+        updatedAt: {
+          type: Date,
+          default: Date.now
+        }
+      }
+    ],
     coverLetter: {
       type: String,
       trim: true,
